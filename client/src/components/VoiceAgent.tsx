@@ -2,47 +2,112 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Mic, MicOff, Volume2, Sparkles } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function VoiceAgent() {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [aiResponse, setAiResponse] = useState("Hi! I'm your AI voice assistant. Click the microphone to start talking.");
   const [audioLevel, setAudioLevel] = useState(0);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const recognitionRef = useRef<any>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = true;
+
+      recognitionRef.current.onresult = (event: any) => {
+        const current = event.resultIndex;
+        const transcriptText = event.results[current][0].transcript;
+        setTranscript(transcriptText);
+
+        if (event.results[current].isFinal) {
+          handleSpeechEnd(transcriptText);
+        }
+      };
+
+      recognitionRef.current.onerror = () => {
+        setIsListening(false);
+        setTranscript("Sorry, I couldn't hear that. Please try again.");
+      };
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
+
+  const startAudioLevel = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioContextRef.current = new AudioContext();
+      analyserRef.current = audioContextRef.current.createAnalyser();
+      const source = audioContextRef.current.createMediaStreamSource(stream);
+      source.connect(analyserRef.current);
+      analyserRef.current.fftSize = 256;
+
+      const bufferLength = analyserRef.current.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+
+      const updateLevel = () => {
+        if (analyserRef.current && isListening) {
+          analyserRef.current.getByteFrequencyData(dataArray);
+          const average = dataArray.reduce((a, b) => a + b) / bufferLength;
+          setAudioLevel(average);
+          requestAnimationFrame(updateLevel);
+        }
+      };
+      updateLevel();
+    } catch (err) {
+      console.error("Microphone access denied:", err);
+    }
+  };
+
+  const handleSpeechEnd = async (text: string) => {
+    setIsProcessing(true);
+    setIsListening(false);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text }),
+      });
+
+      const data = await response.json();
+      setAiResponse(data.response || "I can help you automate your business with AI agents. Would you like to learn more?");
+    } catch (error) {
+      setAiResponse("I can deploy autonomous AI agents that handle your workflows 24/7. Would you like to see a demo?");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   const toggleListening = () => {
     if (isListening) {
       setIsListening(false);
-      setTranscript("");
-      simulateResponse();
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+      setAudioLevel(0);
     } else {
       setIsListening(true);
       setTranscript("Listening...");
-      simulateListening();
+      if (recognitionRef.current) {
+        recognitionRef.current.start();
+      }
+      startAudioLevel();
     }
-  };
-
-  const simulateListening = () => {
-    const phrases = [
-      "How can AI help my business?",
-      "What automation features do you offer?",
-      "Can you integrate with my existing tools?",
-    ];
-    
-    setTimeout(() => {
-      setTranscript(phrases[Math.floor(Math.random() * phrases.length)]);
-    }, 1500);
-  };
-
-  const simulateResponse = () => {
-    const responses = [
-      "I can deploy autonomous AI agents that handle your workflows 24/7. Would you like to see a demo?",
-      "We offer neural automation that connects your entire tech stack. Let me show you how it works.",
-      "Absolutely! Our AI integrates with over 500 platforms. Which tools are you using?",
-    ];
-
-    setTimeout(() => {
-      setAiResponse(responses[Math.floor(Math.random() * responses.length)]);
-    }, 1000);
   };
 
   useEffect(() => {

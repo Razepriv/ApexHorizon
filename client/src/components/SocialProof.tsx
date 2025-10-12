@@ -68,10 +68,9 @@ export default function SocialProof() {
           {testimonials.map((testimonial, index) => (
             <ScrollReveal key={index} delay={index * 150}>
               <Card 
-              key={index}
-              className="border-primary/20 bg-card/50 backdrop-blur-sm hover-elevate transition-all duration-300 p-6"
-              data-testid={`card-testimonial-${index}`}
-            >
+                className="border-primary/20 bg-card/50 backdrop-blur-sm hover-elevate transition-all duration-300 p-6"
+                data-testid={`card-testimonial-${index}`}
+              >
               <div className="flex items-center gap-4 mb-4">
                 <Avatar className="w-12 h-12 border-2 border-primary/30">
                   <AvatarImage src={testimonial.image} alt={testimonial.name} />
