@@ -296,4 +296,9 @@
   .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
     inset: -1px;
   }
+
+  .scroll-reveal-element.scroll-revealed {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
 }
