@@ -1,4 +1,5 @@
 import { Sparkles, Zap, Play } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import heroImage from "@assets/stock_images/futuristic_ai_neural_e16bc214.jpg";
 import ParticleButton from "./ParticleButton";
 
@@ -49,9 +50,15 @@ export default function Hero() {
             <ParticleButton icon={Zap} testId="button-unleash-ai">
               UNLEASH AI POWER
             </ParticleButton>
-            <ParticleButton icon={Play} testId="button-watch-demo">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="backdrop-blur-sm bg-background/20 border-primary/50 hover:bg-primary/10"
+              data-testid="button-watch-demo"
+            >
+              <Play className="w-5 h-5 mr-2" />
               Watch the Demo
-            </ParticleButton>
+            </Button>
           </div>
         </div>
       </div>

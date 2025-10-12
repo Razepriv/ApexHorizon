@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Star } from "lucide-react";
+import ScrollReveal from "./ScrollReveal";
 import ceo1 from "@assets/stock_images/professional_busines_6d2ab48c.jpg";
 import ceo2 from "@assets/stock_images/professional_busines_3951b52b.jpg";
 import ceo3 from "@assets/stock_images/professional_busines_348bda19.jpg";
@@ -65,7 +66,8 @@ export default function SocialProof() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
           {testimonials.map((testimonial, index) => (
-            <Card 
+            <ScrollReveal key={index} delay={index * 150}>
+              <Card 
               key={index}
               className="border-primary/20 bg-card/50 backdrop-blur-sm hover-elevate transition-all duration-300 p-6"
               data-testid={`card-testimonial-${index}`}
@@ -93,6 +95,7 @@ export default function SocialProof() {
                 <div className="text-sm font-mono text-primary">{testimonial.metric}</div>
               </div>
             </Card>
+            </ScrollReveal>
           ))}
         </div>
       </div>
