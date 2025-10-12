@@ -1,8 +1,24 @@
+import { useState, useEffect } from "react";
 import { Clock, TrendingUp } from "lucide-react";
 
 export default function PowerStatement() {
-  const hours = 40;
-  const savings = 2400000;
+  const [hours, setHours] = useState(0);
+  const [savings, setSavings] = useState(0);
+
+  useEffect(() => {
+    const hoursInterval = setInterval(() => {
+      setHours(prev => prev < 40 ? prev + 1 : 40);
+    }, 50);
+
+    const savingsInterval = setInterval(() => {
+      setSavings(prev => prev < 2400000 ? prev + 50000 : 2400000);
+    }, 50);
+
+    return () => {
+      clearInterval(hoursInterval);
+      clearInterval(savingsInterval);
+    };
+  }, []);
 
   return (
     <section className="py-24 md:py-32 relative overflow-hidden">
