@@ -1,18 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Rocket, Calendar, AlertCircle } from "lucide-react";
 
 export default function FinalCTA() {
-  const [spotsLeft, setSpotsLeft] = useState(3);
-  const [companiesThisWeek, setCompaniesThisWeek] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCompaniesThisWeek(prev => prev < 47 ? prev + 1 : 47);
-    }, 50);
-    return () => clearInterval(interval);
-  }, []);
+  const spotsLeft = 3;
+  const companiesThisWeek = 47;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,8 +16,8 @@ export default function FinalCTA() {
     <section className="py-24 md:py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/10 to-background" />
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-glow-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-chart-2/20 rounded-full blur-3xl animate-glow-pulse" style={{ animationDelay: "1s" }} />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-chart-2/20 rounded-full blur-3xl" />
       </div>
 
       <div className="container mx-auto px-4 md:px-8 relative z-10">

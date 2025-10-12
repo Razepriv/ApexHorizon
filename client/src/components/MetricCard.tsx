@@ -4,14 +4,12 @@ interface MetricCardProps {
   value: string;
   label: string;
   icon: LucideIcon;
-  delay?: string;
 }
 
-export default function MetricCard({ value, label, icon: Icon, delay = "0s" }: MetricCardProps) {
+export default function MetricCard({ value, label, icon: Icon }: MetricCardProps) {
   return (
     <div 
-      className="relative group animate-float backdrop-blur-xl bg-card/20 border border-primary/20 rounded-md p-6 hover-elevate transition-all duration-300"
-      style={{ animationDelay: delay }}
+      className="relative group backdrop-blur-xl bg-card/20 border border-primary/20 rounded-md p-6 hover-elevate transition-all duration-300"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-chart-2/10 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       <div className="relative">

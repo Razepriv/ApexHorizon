@@ -49,7 +49,7 @@ export default function AIChat() {
               <div>
                 <div className="font-semibold">APEX AI Assistant</div>
                 <div className="text-xs text-muted-foreground flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-chart-4 animate-glow-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-chart-4" />
                   Online & Learning
                 </div>
               </div>

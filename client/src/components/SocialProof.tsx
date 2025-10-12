@@ -53,10 +53,10 @@ export default function SocialProof() {
         </div>
 
         <div className="mb-16 overflow-hidden">
-          <div className="flex gap-8 animate-ticker whitespace-nowrap">
-            {[...metrics, ...metrics].map((metric, index) => (
+          <div className="flex gap-8 whitespace-nowrap">
+            {metrics.map((metric, index) => (
               <div key={index} className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-primary/10 border border-primary/20">
-                <div className="w-2 h-2 rounded-full bg-primary animate-glow-pulse" />
+                <div className="w-2 h-2 rounded-full bg-primary" />
                 <span className="text-sm font-medium text-primary">{metric}</span>
               </div>
             ))}

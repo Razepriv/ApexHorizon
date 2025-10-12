@@ -15,9 +15,9 @@ export default function Hero() {
       </div>
 
       <div className="absolute inset-0 z-0 opacity-20">
-        <div className="absolute top-20 left-20 w-64 h-64 bg-primary/30 rounded-full blur-3xl animate-glow-pulse" />
-        <div className="absolute bottom-40 right-32 w-96 h-96 bg-chart-2/30 rounded-full blur-3xl animate-glow-pulse" style={{ animationDelay: "1s" }} />
-        <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-chart-3/30 rounded-full blur-3xl animate-glow-pulse" style={{ animationDelay: "2s" }} />
+        <div className="absolute top-20 left-20 w-64 h-64 bg-primary/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-40 right-32 w-96 h-96 bg-chart-2/30 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-chart-3/30 rounded-full blur-3xl" />
       </div>
 
       <div className="container mx-auto px-4 md:px-8 z-10 text-center">
@@ -28,30 +28,30 @@ export default function Hero() {
           </div>
 
           <h1 className="text-6xl md:text-8xl font-bold leading-tight">
-            <span className="bg-gradient-to-r from-primary via-chart-2 to-chart-3 bg-clip-text text-transparent animate-fade-in-up">
+            <span className="bg-gradient-to-r from-primary via-chart-2 to-chart-3 bg-clip-text text-transparent">
               THE FUTURE OF
             </span>
             <br />
-            <span className="text-foreground animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+            <span className="text-foreground">
               BUSINESS RUNS
             </span>
             <br />
-            <span className="bg-gradient-to-r from-chart-2 via-primary to-chart-3 bg-clip-text text-transparent animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+            <span className="bg-gradient-to-r from-chart-2 via-primary to-chart-3 bg-clip-text text-transparent">
               ON AI
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
             Deploy autonomous agents that work 24/7. Automate everything. Scale faster than your competition.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-4 animate-fade-in-up" style={{ animationDelay: "0.8s" }}>
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
             <Button 
               size="lg" 
-              className="group relative overflow-hidden bg-gradient-to-r from-primary to-chart-2 hover:shadow-[0_0_30px_rgba(56,189,248,0.5)] transition-all duration-300"
+              className="group relative overflow-hidden bg-gradient-to-r from-primary to-chart-2 hover:shadow-[0_0_30px_rgba(239,68,68,0.5)] transition-all duration-300"
               data-testid="button-unleash-ai"
             >
-              <Zap className="w-5 h-5 mr-2 group-hover:animate-glow-pulse" />
+              <Zap className="w-5 h-5 mr-2" />
               UNLEASH AI POWER
             </Button>
             <Button 
