@@ -1,11 +1,40 @@
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Rocket, Calendar, AlertCircle } from "lucide-react";
+import { Rocket, Calendar, AlertCircle, Shield, Clock, Globe, Lightning } from "lucide-react";
+import GlowText from "@/components/ui/glow-text";
+
+const benefits = [
+  {
+    icon: Clock,
+    title: "Instant Setup",
+    description: "Get started in minutes, not days",
+  },
+  {
+    icon: Shield,
+    title: "Enterprise Security",
+    description: "Bank-grade encryption & compliance",
+  },
+  {
+    icon: Globe,
+    title: "24/7 Support",
+    description: "Always-on expert assistance",
+  },
+  {
+    icon: Lightning,
+    title: "Rapid ROI",
+    description: "See results from day one",
+  },
+];
 
 export default function FinalCTA() {
   const [spotsLeft, setSpotsLeft] = useState(3);
   const [companiesThisWeek, setCompaniesThisWeek] = useState(0);
+  const [formData, setFormData] = useState({
+    email: "",
+    company: "",
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -16,98 +45,162 @@ export default function FinalCTA() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted");
+    // Handle form submission here
+    console.log("Form submitted:", formData);
   };
 
   return (
     <section className="py-24 md:py-32 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/10 to-background" />
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-glow-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-chart-2/20 rounded-full blur-3xl animate-glow-pulse" style={{ animationDelay: "1s" }} />
+      {/* Background Effects */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-background-secondary opacity-90" />
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.2, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute inset-0"
+        >
+          <div className="absolute inset-0 bg-gradient-radial from-primary/20 via-transparent to-transparent blur-3xl" />
+        </motion.div>
       </div>
 
-      <div className="container mx-auto px-4 md:px-8 relative z-10">
+      <div className="container mx-auto px-4 md:px-8">
         <div className="max-w-4xl mx-auto">
+          {/* Header */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-destructive/50 bg-destructive/10 backdrop-blur-sm mb-6">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-destructive/50 bg-destructive/10 backdrop-blur-sm mb-6"
+            >
               <AlertCircle className="w-4 h-4 text-destructive" />
-              <span className="text-sm font-medium text-destructive">Every Day Without AI Costs You $8,500</span>
-            </div>
+              <span className="text-sm font-medium text-destructive">Limited Spots Available: {spotsLeft} Left</span>
+            </motion.div>
 
-            <h2 className="text-5xl md:text-7xl font-bold mb-6">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-5xl md:text-7xl font-bold mb-6"
+            >
               <span className="text-muted-foreground">Stop Working</span>
               {" "}
               <span className="text-destructive">IN</span>
               {" "}
               <span className="text-muted-foreground">Your Business.</span>
               <br />
-              <span className="bg-gradient-to-r from-primary via-chart-2 to-chart-3 bg-clip-text text-transparent">
-                Start Working ON It.
-              </span>
-            </h2>
+              <GlowText highlight>Start Working ON It.</GlowText>
+            </motion.h2>
 
-            <div className="flex flex-wrap items-center justify-center gap-8 mb-8">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-primary mb-1">{spotsLeft}</div>
-                <div className="text-sm text-muted-foreground">Consultation Spots Left</div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex flex-wrap items-center justify-center gap-8 mb-8"
+            >
+              <div className="flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-primary" />
+                <span className="text-lg">
+                  <span className="font-bold text-primary">{companiesThisWeek}</span>
+                  <span className="text-muted-foreground"> companies onboarded this week</span>
+                </span>
               </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-chart-2 mb-1">{companiesThisWeek}</div>
-                <div className="text-sm text-muted-foreground">Companies Automated This Week</div>
-              </div>
-            </div>
+            </motion.div>
           </div>
 
-          <div className="backdrop-blur-xl bg-card/30 border border-primary/20 rounded-md p-8 md:p-12">
-            <h3 className="text-2xl font-bold mb-6 text-center">Book Your AI Strategy Session</h3>
-            
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input 
-                  placeholder="Your Name" 
-                  className="bg-background/50 border-primary/20 focus:border-primary"
-                  data-testid="input-name"
-                />
-                <Input 
-                  type="email" 
-                  placeholder="Email Address" 
-                  className="bg-background/50 border-primary/20 focus:border-primary"
-                  data-testid="input-email"
-                />
-              </div>
-              <Input 
-                placeholder="Company Name" 
-                className="bg-background/50 border-primary/20 focus:border-primary"
-                data-testid="input-company"
-              />
-              <Input 
-                placeholder="Current Monthly Revenue" 
-                className="bg-background/50 border-primary/20 focus:border-primary"
-                data-testid="input-revenue"
-              />
-              
-              <Button 
-                type="submit"
-                size="lg" 
-                className="w-full bg-gradient-to-r from-primary to-chart-2 hover:shadow-[0_0_30px_rgba(56,189,248,0.5)] transition-all duration-300"
-                data-testid="button-book-session"
-              >
-                <Rocket className="w-5 h-5 mr-2" />
-                BOOK MY SESSION NOW
-              </Button>
-            </form>
+          {/* Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-primary/20 rounded-2xl blur opacity-75" />
+            <div className="relative p-8 rounded-xl bg-card/50 backdrop-blur-sm border border-primary/20">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium mb-2">Work Email</label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="name@company.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                      className="w-full bg-background/50"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="company" className="block text-sm font-medium mb-2">Company Name</label>
+                    <Input
+                      id="company"
+                      type="text"
+                      placeholder="Your company"
+                      value={formData.company}
+                      onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
+                      className="w-full bg-background/50"
+                      required
+                    />
+                  </div>
+                </div>
+                <Button type="submit" className="w-full py-6 text-lg bg-primary hover:bg-primary/90">
+                  <Rocket className="w-5 h-5 mr-2" />
+                  Get Started Now
+                </Button>
+              </form>
 
-            <div className="mt-8 text-center">
-              <p className="text-sm text-muted-foreground mb-4">
-                100% Money-Back Guarantee • Free AI Audit Included • Cancel Anytime
-              </p>
-              <div className="flex items-center justify-center gap-2 text-xs text-primary">
-                <Calendar className="w-4 h-4" />
-                <span>Next available slot: Tomorrow at 2:00 PM</span>
+              <div className="mt-8">
+                <div className="text-sm text-center text-muted-foreground mb-6">
+                  Everything you need to transform your business with AI
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {benefits.map((benefit, index) => (
+                    <motion.div
+                      key={benefit.title}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex items-start gap-4"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        {React.createElement(benefit.icon, { className: "w-5 h-5 text-primary" })}
+                      </div>
+                      <div>
+                        <div className="font-medium mb-1">{benefit.title}</div>
+                        <div className="text-sm text-muted-foreground">{benefit.description}</div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          </motion.div>
+
+          {/* Trust Indicators */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-8 text-center text-sm text-muted-foreground"
+          >
+            <div className="flex items-center justify-center gap-2">
+              <Shield className="w-4 h-4" />
+              <span>Enterprise-grade security</span>
+              <span className="mx-2">•</span>
+              <span>SOC 2 Certified</span>
+              <span className="mx-2">•</span>
+              <span>GDPR Compliant</span>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -2,6 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --font-inter: 'Inter';
+    --font-space-grotesk: 'Space Grotesk';
+  }
+
+  body {
+    @apply bg-background text-text antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Improved button hover states */
+  button, a {
+    @apply transition-all duration-300;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/20 rounded-full hover:bg-primary/40 transition-colors;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-primary bg-clip-text text-transparent;
+  }
+  
+  .glassmorphism {
+    @apply backdrop-blur-md bg-white/5 border border-white/10;
+  }
+
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-1;
+  }
+}
+
+/* Custom Classes */
+.magnetic-button {
+  @apply relative inline-block;
+}
+
+.magnetic-button:hover {
+  transform: translate(var(--mx, 0), var(--my, 0));
+}
+
 /* LIGHT MODE */
 :root {
   --button-outline: rgba(0,0,0, .10);

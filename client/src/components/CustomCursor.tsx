@@ -2,112 +2,57 @@ import { useEffect, useState, useRef } from "react";
 
 export default function CustomCursor() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [targetPosition, setTargetPosition] = useState({ x: 0, y: 0 });
   const [isPointer, setIsPointer] = useState(false);
-  const [trail, setTrail] = useState<{ x: number; y: number; id: number }[]>([]);
-  const animationFrameRef = useRef<number>();
+  const requestRef = useRef<number>();
+  const lastMousePos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    let trailId = 0;
-    const magneticRadius = 80;
-    const magneticStrength = 0.3;
-
     const handleMouseMove = (e: MouseEvent) => {
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
-      
       const target = e.target as HTMLElement;
-      const isInteractive = 
-        window.getComputedStyle(target).cursor === "pointer" ||
-        target.tagName === "BUTTON" ||
-        target.tagName === "A" ||
-        target.closest("button") !== null ||
-        target.closest("a") !== null;
-
+      const isInteractive = target.tagName === "BUTTON" || target.tagName === "A" || target.closest("button") !== null || target.closest("a") !== null || window.getComputedStyle(target).cursor === "pointer";
       setIsPointer(isInteractive);
-
-      let finalX = mouseX;
-      let finalY = mouseY;
-
-      if (isInteractive) {
-        const button = target.tagName === "BUTTON" || target.tagName === "A" 
-          ? target 
-          : target.closest("button") || target.closest("a");
-          
-        if (button) {
-          const rect = button.getBoundingClientRect();
-          const buttonCenterX = rect.left + rect.width / 2;
-          const buttonCenterY = rect.top + rect.height / 2;
-          
-          const dx = buttonCenterX - mouseX;
-          const dy = buttonCenterY - mouseY;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          
-          if (distance < magneticRadius) {
-            finalX += dx * magneticStrength;
-            finalY += dy * magneticStrength;
-          }
-        }
-      }
-
-      setTargetPosition({ x: finalX, y: finalY });
-
-      setTrail(prev => {
-        const newTrail = [...prev, { x: mouseX, y: mouseY, id: trailId++ }];
-        return newTrail.slice(-15);
-      });
+      lastMousePos.current = { x: e.clientX, y: e.clientY };
     };
 
     const animate = () => {
-      setPosition(prev => ({
-        x: prev.x + (targetPosition.x - prev.x) * 0.2,
-        y: prev.y + (targetPosition.y - prev.y) * 0.2,
-      }));
-      animationFrameRef.current = requestAnimationFrame(animate);
+      setPosition(prev => {
+        const dx = lastMousePos.current.x - prev.x;
+        const dy = lastMousePos.current.y - prev.y;
+        return {
+          x: prev.x + dx * 0.2,
+          y: prev.y + dy * 0.2
+        };
+      });
+      requestRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
     window.addEventListener("mousemove", handleMouseMove);
+    requestRef.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
       }
     };
-  }, [targetPosition]);
+  }, []);
 
   return (
     <>
-      {trail.map((point, index) => (
-        <div
-          key={point.id}
-          className="fixed pointer-events-none z-[9999] rounded-full bg-primary"
-          style={{
-            left: point.x,
-            top: point.y,
-            width: `${(index + 1) * 2}px`,
-            height: `${(index + 1) * 2}px`,
-            transform: "translate(-50%, -50%)",
-            opacity: (index + 1) / trail.length * 0.3,
-            transition: "opacity 0.3s ease",
-          }}
-        />
-      ))}
-      
-      <div
-        className={`fixed pointer-events-none z-[9999] rounded-full border-2 border-primary transition-all duration-200 ${
-          isPointer ? "scale-150" : "scale-100"
-        }`}
+      <style>{`* { cursor: none !important; }`}</style>
+      <div 
+        className="fixed pointer-events-none z-50"
         style={{
-          left: position.x,
-          top: position.y,
-          width: "20px",
-          height: "20px",
-          transform: "translate(-50%, -50%)",
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          transform: "translate(-50%, -50%)"
         }}
       >
-        <div className="absolute inset-0 rounded-full bg-primary animate-glow-pulse opacity-50" />
+        <div className={`relative ${isPointer ? "scale-150" : "scale-100"} transition-transform duration-200`}>
+          <div 
+            className={`w-4 h-4 rounded-full bg-gradient-to-r from-red-500 to-red-600 shadow-[0_0_15px_rgba(239,68,68,0.6)] before:content-[""] before:absolute before:inset-0 before:bg-red-500/20 before:rounded-full before:animate-ping transition-all duration-200 ${isPointer ? "scale-150 opacity-70" : "scale-100 opacity-100"}`}
+          />
+        </div>
       </div>
     </>
   );

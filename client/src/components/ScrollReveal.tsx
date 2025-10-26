@@ -1,45 +1,75 @@
-import { useEffect, useRef, ReactNode } from "react";
+import { useRef, useEffect, type ReactNode } from 'react';
+import { motion, useInView, useAnimation } from 'framer-motion';
 
 interface ScrollRevealProps {
   children: ReactNode;
+  variant?: 'fade-up' | 'fade-in' | 'slide-left' | 'slide-right';
   delay?: number;
+  duration?: number;
+  threshold?: number;
+  className?: string;
 }
 
-export default function ScrollReveal({ children, delay = 0 }: ScrollRevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
+const variants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+    x: 0,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    x: 0,
+  },
+} as const;
 
+const slideVariants = {
+  'slide-left': {
+    hidden: { x: 50, opacity: 0 },
+    visible: { x: 0, opacity: 1 },
+  },
+  'slide-right': {
+    hidden: { x: -50, opacity: 0 },
+    visible: { x: 0, opacity: 1 },
+  },
+} as const;
+
+export default function ScrollReveal({
+  children,
+  variant = 'fade-up',
+  delay = 0,
+  duration = 0.5,
+  threshold = 0.2,
+  className,
+}: ScrollRevealProps) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, threshold });
+  const controls = useAnimation();
+  
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setTimeout(() => {
-              entry.target.classList.add("scroll-revealed");
-            }, delay);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
+    if (isInView) {
+      controls.start('visible');
     }
+  }, [isInView, controls]);
 
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, [delay]);
+  const selectedVariant = variant.includes('slide') 
+    ? slideVariants[variant as keyof typeof slideVariants]
+    : variants;
 
   return (
-    <div
+    <motion.div
       ref={ref}
-      className="scroll-reveal-element opacity-0 translate-y-20"
-      style={{ transition: "all 0.8s cubic-bezier(0.17, 0.55, 0.55, 1)" }}
+      initial="hidden"
+      animate={controls}
+      variants={selectedVariant}
+      transition={{
+        duration,
+        delay,
+        ease: [0.22, 1, 0.36, 1], // Custom cubic-bezier for smooth animation
+      }}
+      className={className}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }
